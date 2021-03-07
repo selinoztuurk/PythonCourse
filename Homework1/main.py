@@ -13,6 +13,10 @@ class Portfolio:
         self.log.append(new_log)
 
     def buyStock(self, num_shares, stock):
+        if not isinstance(num_shares, int):
+            new_log = f'Tried to buy stock, error due to non-integer number of shares'
+            self.log.append(new_log)
+            return
         self.cash -= stock.price * num_shares
         if stock.symbol in self.stocks:
             self.stocks[stock.symbol] += num_shares
@@ -22,6 +26,10 @@ class Portfolio:
         self.log.append(new_log)
 
     def buyMutualFund(self, num_shares, mutual_fund):
+        if not isinstance(num_shares, float):
+            new_log = f'Tried to buy mutual fund, error due to integer number of shares'
+            self.log.append(new_log)
+            return
         self.cash -= num_shares
         if mutual_fund.symbol in self.stocks:
             self.mutual_funds[mutual_fund.symbol] += num_shares
@@ -31,12 +39,16 @@ class Portfolio:
         self.log.append(new_log)
 
     def sellStock(self, stock_symbol, num_shares):
+        if not isinstance(num_shares, int):
+            new_log = f'Tried to sell stock, error due to non-integer number of shares'
+            self.log.append(new_log)
+            return
         if stock_symbol in self.stocks:
             x = self.stocks[stock_symbol]
             if x >= num_shares:
                 sell_price = random.uniform(x*0.5, x*1.5)
                 self.cash += sell_price * num_shares
-                new_log = f'Sold stock: {num_shares} {stock_symbol}, at price {x}'
+                new_log = f'Sold stock: {num_shares} {stock_symbol}, at price {sell_price} for each share'
                 self.log.append(new_log)
             else:
                 new_log = f'Tried to sell {num_shares} shares of {stock_symbol}, ' \
@@ -48,12 +60,16 @@ class Portfolio:
             self.log.append(new_log)
 
     def sellMutualFund(self, mutual_fund_symbol, num_shares):
+        if not isinstance(num_shares, float):
+            new_log = f'Tried to sell mutual fund, error due to integer number of shares'
+            self.log.append(new_log)
+            return
         if mutual_fund_symbol in self.mutual_funds:
             x = self.mutual_funds[mutual_fund_symbol]
             if x >= num_shares:
                 sell_price = random.uniform(0.9, 1.2)
                 self.cash += sell_price * num_shares
-                new_log = f'Sold mutual fund: {num_shares} {mutual_fund_symbol}, at price {x}'
+                new_log = f'Sold mutual fund: {num_shares} {mutual_fund_symbol}, at price {sell_price} for each share'
                 self.log.append(new_log)
             else:
                 new_log = f'Tried to sell {num_shares} shares of {mutual_fund_symbol},'\
@@ -90,17 +106,22 @@ class Portfolio:
             print(log)
 
 
-class Stock:
-
-    def __init__(self, price, symbol):
-        self.price = price
-        self.symbol = symbol
-
-
-class MutualFund:
+class Investment:
 
     def __init__(self, symbol):
         self.symbol = symbol
+
+
+class Stock(Investment):
+
+    def __init__(self, price, symbol):
+        super().__init__(symbol)
+        self.price = price
+
+
+class MutualFund(Investment):
+
+    pass
 
 
 portfolio = Portfolio()
@@ -116,5 +137,25 @@ portfolio.sellMutualFund("BRT", 3)
 portfolio.sellStock("HFH", 1)
 portfolio.withdrawCash(50)
 portfolio.history()
+
+# additional test cases
+
+portfolio.withdrawCash(150)  # error
+portfolio.addCash(500)
+
+portfolio.buyStock(10.5, "HFH")  # error
+portfolio.sellStock(10.5, "HFH")  # error
+portfolio.buyMutualFund(10, "BRT")  # error
+portfolio.sellMutualFund(10, "BRT")  # error
+
+print(portfolio)
+portfolio.history()
+
+
+# bonus
+
+class Bond(Investment):
+
+    pass
 
 
