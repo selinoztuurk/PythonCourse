@@ -1,5 +1,4 @@
 import unittest
-import numpy as np
 import pandas as pd
 
 from Homework2 import linearRegression as lr

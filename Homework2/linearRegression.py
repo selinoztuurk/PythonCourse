@@ -25,13 +25,13 @@ def linear_regression(dataset):
     X = clear_dataset.iloc[:, :-1]
     y = clear_dataset[clear_dataset.columns[-1]]
 
-    coefficients = ((np.linalg.inv((X.T).dot(X))).dot(X.T).dot(y))
+    coefficients = ((np.linalg.inv(X.T.dot(X))).dot(X.T).dot(y))
 
     y_estimated = X.dot(coefficients)
 
     error = y - y_estimated
 
-    variance = (((error.T).dot(error))/(len(clear_dataset) - len(X.columns) - 1))*((np.linalg.inv((X.T).dot(X))))
+    variance = ((error.T.dot(error)) / (len(clear_dataset) - len(X.columns) - 1)) * (np.linalg.inv(X.T.dot(X)))
 
     t_stats = stats.t.ppf(0.95, len(clear_dataset) - 1)
 
