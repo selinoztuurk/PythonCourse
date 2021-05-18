@@ -26,10 +26,6 @@ nan_values_1 = [97, 98, 99]
 nan_values_2 = [7, 8, 9]
 nan_values_3 = [996, 997, 998, 999]
 
-# print(data[(data["EDUCATION"].isin(nan_values_1)) &
-#            (data["MARITAL STATUS"].isin(nan_values_2))].__len__())
-
-
 # print(data.groupby(["GENDER"]).count())  # saw that there are no NaN answers, moving on
 
 # print(data.groupby(["EDUCATION"]).count())  # found some NaN answers, removing those rows (40 rows to removed)
@@ -38,10 +34,12 @@ data.drop(data[(data["EDUCATION"].isin(nan_values_1))].index, inplace=True)
 # print(data.groupby(["MARITAL STATUS"]).count())  # found some NaN answers, removing those rows (762 rows removed)
 data.drop(data[data["MARITAL STATUS"].isin(nan_values_2)].index, inplace=True)
 
-# print(data.groupby(["UNION MEMBERSHIP OF RESPONDENT"]).count())  # found some NaN answers, removing those rows (1168 rows removed)
+# print(data.groupby(["UNION MEMBERSHIP OF RESPONDENT"]).count())
+# found some NaN answers, removing those rows (1168 rows removed)
 data.drop(data[data["UNION MEMBERSHIP OF RESPONDENT"].isin(nan_values_2)].index, inplace=True)
 
-# print(data.groupby(["UNION MEMBERSHIP OF OTHERS IN HOUSEHOLD"]).count())  # found some NaN answers, removing those rows (1149 rows removed)
+# print(data.groupby(["UNION MEMBERSHIP OF OTHERS IN HOUSEHOLD"]).count())
+# found some NaN answers, removing those rows (1149 rows removed)
 data.drop(data[data["UNION MEMBERSHIP OF OTHERS IN HOUSEHOLD"].isin(nan_values_2)].index, inplace=True)
 
 # print(data.groupby(["BUSINESS OR EMPLOYERS' ASSOCIATION MEMBERSHIP"]).count())
@@ -56,7 +54,8 @@ data = data.drop("FARMERS' ASSOCIATION MEMBERSHIP", axis=1)
 # removing NaN rows on this column will cause a lot of information loss, thus dropping this column completely
 data = data.drop("PROFESSIONAL ASSOCIATION MEMBERSHIP", axis=1)
 
-# print(data.groupby(["CURRENT EMPLOYMENT STATUS"]).count())  # found some NaN answers, removing those rows (39 rows removed)
+# print(data.groupby(["CURRENT EMPLOYMENT STATUS"]).count())
+# found some NaN answers, removing those rows (39 rows removed)
 data.drop(data[data["CURRENT EMPLOYMENT STATUS"].isin(nan_values_1)].index, inplace=True)
 
 # print(data.groupby(["MAIN OCCUPATION"]).count())
@@ -111,7 +110,8 @@ data = data.drop("NUMBER OF CHILDREN IN HOUSEHOLD UNDER AGE 18", axis=1)
 # removing NaN rows on this column will cause a lot of information loss, thus dropping this column completely
 data = data.drop("NUMBER IN HOUSEHOLD UNDER AGE 6", axis=1)
 
-# print(data.groupby(["RELIGIOUS SERVICES ATTENDANCE"]).count())  # found some NaN answers, removing those rows (204 rows removed)
+# print(data.groupby(["RELIGIOUS SERVICES ATTENDANCE"]).count())
+# found some NaN answers, removing those rows (204 rows removed)
 data.drop(data[data["RELIGIOUS SERVICES ATTENDANCE"].isin(nan_values_2)].index, inplace=True)
 
 # print(data.groupby(["RELIGIOSITY"]).count())
@@ -150,6 +150,7 @@ data.to_csv("with_column_names.csv")
 
 columns_to_be_ohed = list(data.columns)
 columns_to_be_ohed.remove("RELIGIOUS SERVICES ATTENDANCE")
+columns_to_be_ohed.remove("EDUCATION")
 columns_to_be_ohed.remove("age")
 columns_to_be_ohed.remove("voted")
 
@@ -166,45 +167,46 @@ y = data["voted"]
 from sklearn.model_selection import train_test_split
 Xtrain, Xtest, ytrain, ytest = train_test_split(X, y, random_state=1)
 
-# # Trying the GaussianNB model
-# from sklearn.naive_bayes import GaussianNB
-# model = GaussianNB()
-# model.fit(Xtrain, ytrain)
-# y_model = model.predict(Xtest)
-#
-# # Accuracy of GaussianNB
-# from sklearn.metrics import accuracy_score
-# print("GaussianNB accuracy:", accuracy_score(ytest, y_model))  # returns 0.7514
-#
-# # Cross Validation for GaussianNB
-# from sklearn.model_selection import cross_val_score
-# print("Cross Validation for GaussianNB:", cross_val_score(model, X, y, cv=5))
-# print("Mean:", cross_val_score(model, X, y, cv=5).mean())
-# print()
-#
-# # Trying the SGDClassifier model
-# from sklearn.linear_model import SGDClassifier
-# from sklearn.preprocessing import StandardScaler
-# from sklearn.pipeline import make_pipeline
-# clf = make_pipeline(StandardScaler(), SGDClassifier(random_state=1))
-# clf.fit(Xtrain, ytrain)
-# print("SGDClassifier accuracy:", clf.score(Xtest, ytest))  # returns 0.8403
-# print()
-#
-# # Trying the LinearSVC model
-# from sklearn.svm import LinearSVC
-# clf = make_pipeline(StandardScaler(), LinearSVC(random_state=1, max_iter=10000))
-# clf.fit(Xtrain, ytrain)
-# print("LinearSVC accuracy:", clf.score(Xtest, ytest))  # returns 0.8495
-# print()
+# Trying the GaussianNB model
+from sklearn.naive_bayes import GaussianNB
+model = GaussianNB()
+model.fit(Xtrain, ytrain)
+y_model = model.predict(Xtest)
+
+# Accuracy of GaussianNB
+from sklearn.metrics import accuracy_score
+print("GaussianNB accuracy:", accuracy_score(ytest, y_model))  # returns 0.7919
+
+# Cross Validation for GaussianNB
+from sklearn.model_selection import cross_val_score
+print("Cross Validation for GaussianNB:", cross_val_score(model, X, y, cv=5))
+print("Mean:", cross_val_score(model, X, y, cv=5).mean()) # returns 0.7725
+print()
+
+# Trying the SGDClassifier model
+from sklearn.linear_model import SGDClassifier
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import make_pipeline
+clf = make_pipeline(StandardScaler(), SGDClassifier(random_state=1))
+clf.fit(Xtrain, ytrain)
+print("SGDClassifier accuracy:", clf.score(Xtest, ytest))  # returns 0.8399
+print()
+
+# Trying the LinearSVC model
+from sklearn.svm import LinearSVC
+clf = make_pipeline(StandardScaler(), LinearSVC(random_state=1, max_iter=10000))
+clf.fit(Xtrain, ytrain)
+print("LinearSVC accuracy:", clf.score(Xtest, ytest))  # returns 0.8469
+print()
 
 # Trying the DecisionTreeClassifier model
 from sklearn import tree
 from sklearn.model_selection import cross_val_score
-treeclassifier = tree.DecisionTreeClassifier(max_depth=5, random_state=1)
+treeclassifier = tree.DecisionTreeClassifier(max_depth=4, random_state=1)
 treeclassifier = treeclassifier.fit(Xtrain, ytrain)
 print("Cross Validation for DecisionTreeClassifier: ", cross_val_score(treeclassifier, Xtest, ytest, cv=5))
-print("Mean:", cross_val_score(treeclassifier, Xtest, ytest, cv=5).mean())
-text_representation = tree.export_text(treeclassifier)
+print("Mean:", cross_val_score(treeclassifier, Xtest, ytest, cv=5).mean()) # returns 0.8605
+print()
+text_representation = tree.export_text(decision_tree=treeclassifier, feature_names=list(X.columns))
 print(text_representation)
 
