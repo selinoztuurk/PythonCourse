@@ -234,12 +234,9 @@ X_predict = [
     [0.75, 3, aggregate_data["boomers"][2021], aggregate_data["gen_z"][2021], aggregate_data["gdp_per_capita"][2021],
      aggregate_data["unemployment_rate"][2021]]]
 
-
 X_predict = [
     [0.75, 6, aggregate_data["boomers"][2021], aggregate_data["gen_z"][2021], aggregate_data["gdp_per_capita"][2021],
      aggregate_data["unemployment_rate"][2021]]]
-"""
-"""
 
 y_predict = model.predict(X_predict)
 
